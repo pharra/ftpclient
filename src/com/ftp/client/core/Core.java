@@ -1,6 +1,7 @@
 package com.ftp.client.core;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.ftp.client.utils.Command;
@@ -46,15 +47,24 @@ public class Core {
         this.exec(Command.PASS(this.password), "230");
     }
 
-    public BufferedReader exec(String command, String shall) throws IOException {
+    public String exec(String command, String shall) throws IOException {
         writer.println(command);
-
         String response = reader.readLine();
         System.out.println(response);
-        if (!response.startsWith(shall)) {
-            throw new IOException("login failed:" + response);
+        if (shall == null) {
+            return response;
         }
-        return reader;
+
+        if (!response.startsWith(shall)) {
+            throw new IOException("exec failed:" + response);
+        }
+        return response;
+    }
+
+    public Socket listenPort(int port) throws IOException {
+        ServerSocket dataSocketServ = new ServerSocket(port);
+        Socket dataSocket = dataSocketServ.accept();
+        return dataSocket;
     }
 
 }
