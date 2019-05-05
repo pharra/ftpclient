@@ -61,10 +61,17 @@ public class Core {
         return response;
     }
 
+    // 主动模式
     public Socket listenPort(int port) throws IOException {
         ServerSocket dataSocketServ = new ServerSocket(port);
         Socket dataSocket = dataSocketServ.accept();
         return dataSocket;
+    }
+
+    // 被动模式
+    public Socket usePortConnectRemote(int localPort, int remotePort) throws IOException {
+        Socket local = new Socket(this.url,remotePort,null,localPort);
+        return local;
     }
 
 }
