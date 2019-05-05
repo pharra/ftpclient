@@ -38,20 +38,18 @@ public class Core {
     }
 
     private void login() throws IOException {
-        writer.println(Command.USER(this.username));
+
+        this.exec(Command.USER(this.username), "331");
+
+        this.exec(Command.PASS(this.password), "230");
+    }
+
+    public void exec(String command, String shall) throws IOException {
+        writer.println(command);
 
         String response = reader.readLine();
         System.out.println(response);
-        if (!response.startsWith("331")) {
-            throw new IOException("login failed:" + response);
-        }
-
-
-        writer.println(Command.PASS(this.password));
-
-        response = reader.readLine();
-        System.out.println(response);
-        if (!response.startsWith("230")) {
+        if (!response.startsWith(shall)) {
             throw new IOException("login failed:" + response);
         }
     }

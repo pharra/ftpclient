@@ -54,7 +54,7 @@ public class Command {
         return "STOR " + filename;
     }
 
-    // 储存文件到服务器名称上
+    // 	唯一地保存文件
     public static String STOU(String filename) {
         return "STOU " + filename;
     }
