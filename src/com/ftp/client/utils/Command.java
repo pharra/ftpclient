@@ -59,5 +59,10 @@ public class Command {
         return "STOU " + filename;
     }
 
+    // 打开数据流端口
+    public static String MYPORT(String url, int port) {
+        return "MYPORT " + url + "," + port;
+    }
+
 
 }
