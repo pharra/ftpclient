@@ -8,12 +8,14 @@ import com.ftp.client.utils.Command;
 public class Core {
     private String username = null;
     private String password = null;
+    private String url = null;
 
     private BufferedReader reader = null;
     private PrintWriter writer = null;
 
     public Core(String url, String username, String password, int port) throws Exception {
         try {
+            this.url = url;
             Socket socket = new Socket(url, port);//建立与服务器的socket连接
 
             this.username = username;
@@ -44,7 +46,7 @@ public class Core {
         this.exec(Command.PASS(this.password), "230");
     }
 
-    public void exec(String command, String shall) throws IOException {
+    public BufferedReader exec(String command, String shall) throws IOException {
         writer.println(command);
 
         String response = reader.readLine();
@@ -52,6 +54,7 @@ public class Core {
         if (!response.startsWith(shall)) {
             throw new IOException("login failed:" + response);
         }
+        return reader;
     }
 
 }
