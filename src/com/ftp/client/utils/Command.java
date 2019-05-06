@@ -60,11 +60,11 @@ public class Command {
     }
 
     // 打开数据流端口
-    public static String PORT(String url, int port) {
+    public static String PORT(int port) {
         return "PORT " + port;
     }
 
-    public static String PASV(String url, int port) {
+    public static String PASV(int port) {
         return "PASV";
     }
 

@@ -14,29 +14,26 @@ public class Core {
     private BufferedReader reader = null;
     private PrintWriter writer = null;
 
-    public Core(String url, String username, String password, int port) throws Exception {
-        try {
-            this.url = url;
-            Socket socket = new Socket(url, port);//建立与服务器的socket连接
+    public Core(String url, String username, String password, int port) throws IOException {
 
-            this.username = username;
-            this.password = password;
+        this.url = url;
+        Socket socket = new Socket(url, port);//建立与服务器的socket连接
 
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+        this.username = username;
+        this.password = password;
 
-            String response = reader.readLine();
-            if (!response.startsWith("220")) {
-                throw new Exception("unknow response after connect!");
-            }
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+        String response = reader.readLine();
+        if (!response.startsWith("220")) {
+            throw new IOException("unknow response after connect!");
         }
+
+
     }
 
-    public Core(String url, String username, String password) throws Exception {
+    public Core(String url, String username, String password) throws IOException {
         this(url, username, password, 21);
     }
 
@@ -70,7 +67,7 @@ public class Core {
 
     // 被动模式
     public Socket usePortConnectRemote(int localPort, int remotePort) throws IOException {
-        Socket local = new Socket(this.url,remotePort,null,localPort);
+        Socket local = new Socket(this.url, remotePort, null, localPort);
         return local;
     }
 
