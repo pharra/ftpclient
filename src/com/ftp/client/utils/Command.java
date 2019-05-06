@@ -34,12 +34,12 @@ public class Command {
     }
 
     // 由特定偏移量重启文件传递
-    public static String REST(int offset) {
+    public static String REST(long offset) {
         return "REST " + offset;
     }
 
     // 从服务器上找回（复制）文件
-    public static String RETR(int filename) {
+    public static String RETR(String filename) {
         return "RETR " + filename;
     }
 
@@ -60,13 +60,17 @@ public class Command {
     }
 
     // 打开数据流端口
-    public static String PORT(int port) {
+    public static String PORT(String port) {
         return "PORT " + port;
     }
 
-    public static String PASV(int port) {
+    public static String PASV() {
         return "PASV";
     }
 
+    //无动作
+    public static String NOOP() { return "NOOP"; }
 
+    //通知服务器，从数据通道发送给你的数据要附加到这个文件末尾
+    public static String APPE(String filename) { return "APPE " + filename; }
 }

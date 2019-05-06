@@ -66,8 +66,8 @@ public class Core {
     }
 
     // 被动模式
-    public Socket usePortConnectRemote(int localPort, int remotePort) throws IOException {
-        Socket local = new Socket(this.url, remotePort, null, localPort);
+    public Socket usePortConnectRemote(int remotePort) throws IOException {
+        Socket local = new Socket(this.url, remotePort);
         return local;
     }
 
