@@ -62,7 +62,7 @@ public class Core {
         }
 
         if (!response[0].startsWith(shall)) {
-            throw new IOException("exec failed:" + response);
+            throw new IOException("exec failed:" + response[0]);
         }
         return response;
     }
