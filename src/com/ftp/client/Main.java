@@ -1,35 +1,21 @@
 package com.ftp.client;
 
-import java.awt.EventQueue;
-
 import javax.swing.*;
-import java.awt.BorderLayout;
-import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileSystemView;
 
 
-import java.awt.ScrollPane;
-import java.awt.Label;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Vector;
-import java.awt.Scrollbar;
+import java.util.Arrays;
 
-public class Main implements ActionListener {
+public class Main {
 
 
     //初始化参数--------------------------------
-    static String FTP = "127.0.0.1";
+    static String url = "127.0.0.1";
     static String username = "liyz";
     static String password = "000000";
     //初始化参数--------------------------------
@@ -37,83 +23,82 @@ public class Main implements ActionListener {
 
     private JFrame frame;
     private JTable table;
+    private JTextField urlText;
+    private JTextField usernameText;
+    private JPasswordField passwordText;
+    private JButton login;
+    private JButton upload;
+    private JButton refresh;
+
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Main window = new Main();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+        Main window = new Main();
+        window.frame.setVisible(true);
     }
 
     /**
      * Create the application.
      */
     public Main() {
-        initialize();
-    }
 
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-        frame = new JFrame();
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/com/sun/java/swing/plaf/windows/icons/UpFolder.gif")));
-        frame.setTitle("FTP Client");
-        frame.setBounds(100, 100, 470, 534);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        // window
+        this.frame = new JFrame();
+        this.frame.setTitle("FTP Client");
+        this.frame.setSize(600, 600);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.getContentPane().setLayout(null);
 
 
-        //显示基本信息(FTP username)-----------------------------------------------
-        JLabel lblNewLabel = new JLabel("FTP IP地址");
-        lblNewLabel.setBounds(32, 8, 70, 15);
-        frame.getContentPane().add(lblNewLabel);
+        // url
+        JLabel addressLabel = new JLabel("地址");
+        addressLabel.setFont(new Font("宋体", Font.PLAIN, 14));
+        addressLabel.setBounds(10, 10, 50, 25);
+        this.frame.getContentPane().add(addressLabel);
 
-        JLabel lblNewLabel_1 = new JLabel("用户名");
-        lblNewLabel_1.setBounds(32, 25, 70, 15);
-        frame.getContentPane().add(lblNewLabel_1);
+        this.urlText = new JTextField();
+        this.urlText.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.urlText.setBounds(60, 10, 100, 25);
+        this.frame.getContentPane().add(this.urlText);
 
-        JLabel lblNewLabel_2 = new JLabel("密码");
-        lblNewLabel_2.setBounds(32, 40, 70, 15);
-        frame.getContentPane().add(lblNewLabel_2);
+        // username
+        JLabel usernameLabel = new JLabel("用户名");
+        usernameLabel.setFont(new Font("宋体", Font.PLAIN, 14));
+        usernameLabel.setBounds(210, 10, 100, 25);
+        this.frame.getContentPane().add(usernameLabel);
 
-        JTextField url = new JTextField("127.0.0.1");   //FTP服务地址
-        url.setBounds(110, 8, 82, 15);
-        frame.getContentPane().add(url);
+        this.usernameText = new JTextField();
+        this.usernameText.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.usernameText.setBounds(260, 10, 100, 25);
+        this.frame.getContentPane().add(this.usernameText);
 
-        JTextField usernameField = new JTextField("admin"); //用户名
-        usernameField.setBounds(110, 25, 82, 15);
-        frame.getContentPane().add(usernameField);
+        // password
+        JLabel passwordLabel = new JLabel("密码");
+        passwordLabel.setFont(new Font("宋体", Font.PLAIN, 14));
+        passwordLabel.setBounds(410, 10, 100, 25);
+        this.frame.getContentPane().add(passwordLabel);
 
-        JPasswordField passwordField = new JPasswordField("000000");  //密码
-        passwordField.setBounds(110, 40, 82, 15);
-        frame.getContentPane().add(passwordField);
+        this.passwordText = new JPasswordField();
+        this.passwordText.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.passwordText.setBounds(460, 10, 100, 25);
+        this.frame.getContentPane().add(this.passwordText);
 
 
         //登录按钮------------------------------------------------
-        JButton login = new JButton("登录");
-        login.setFont(new Font("宋体", Font.PLAIN, 12));
-        login.setBackground(UIManager.getColor("Button.highlight"));
-        login.setBounds(210, 15, 82, 23);
-        frame.getContentPane().add(login);
-        login.addActionListener(new ActionListener() {
+        this.login = new JButton("登录");
+        this.login.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.login.setBackground(UIManager.getColor("Button.highlight"));
+        this.login.setBounds(10, 50, 100, 25);
+        this.frame.getContentPane().add(this.login);
+        this.login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("登录==============");
                 try {
-                    FTP = url.getText().trim();
-                    username = usernameField.getText().trim();
-                    password = passwordField.getText().trim();
+                    url = urlText.getText().trim();
+                    username = usernameText.getText().trim();
+                    password = Arrays.toString(passwordText.getPassword()).trim();
 
 
                 } catch (Exception e1) {
@@ -125,12 +110,12 @@ public class Main implements ActionListener {
 
 
         //上传按钮--------------------------------------------------
-        JButton upload = new JButton("上传");
-        upload.setFont(new Font("宋体", Font.PLAIN, 12));
-        upload.setBackground(UIManager.getColor("Button.highlight"));
-        upload.setBounds(312, 45, 82, 23);
-        frame.getContentPane().add(upload);
-        upload.addActionListener(new ActionListener() {
+        this.upload = new JButton("上传");
+        this.upload.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.upload.setBackground(UIManager.getColor("Button.highlight"));
+        this.upload.setBounds(120, 50, 100, 25);
+        this.frame.getContentPane().add(this.upload);
+        this.upload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 //上传点击按钮触发------------------------------------
                 System.out.println("上传！！！！！");
@@ -139,7 +124,7 @@ public class Main implements ActionListener {
                 String path = null;
                 JFileChooser fileChooser = new JFileChooser();
                 FileSystemView fsv = FileSystemView.getFileSystemView();
-                System.out.println(fsv.getHomeDirectory());                //得到桌面路径  
+                System.out.println(fsv.getHomeDirectory());                //得到桌面路径
                 fileChooser.setCurrentDirectory(fsv.getHomeDirectory());
                 fileChooser.setDialogTitle("请选择要上传的文件...");
                 fileChooser.setApproveButtonText("确定");
@@ -163,7 +148,7 @@ public class Main implements ActionListener {
 
 
         //刷新按钮--------------------------------------------------
-        JButton refresh = new JButton("刷新");
+        this.refresh = new JButton("刷新");
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
@@ -174,14 +159,14 @@ public class Main implements ActionListener {
                 }
             }
         });
-        refresh.setFont(new Font("宋体", Font.PLAIN, 12));
-        refresh.setBackground(UIManager.getColor("Button.highlight"));
-        refresh.setBounds(312, 15, 82, 23);
-        frame.getContentPane().add(refresh);
+        this.refresh.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.refresh.setBackground(UIManager.getColor("Button.highlight"));
+        this.refresh.setBounds(230, 50, 100, 25);
+        this.frame.getContentPane().add(this.refresh);
         //刷新按钮--------------------------------------------------
 
-
     }
+
 
     //显示基本信息-----------------------------------------------
     private void setTableInfo() {
@@ -224,11 +209,5 @@ public class Main implements ActionListener {
 //
 //        //table button初始化(最后一列的按键)--------------------
 //        ButtonColumn buttonsColumn = new ButtonColumn(table, 3);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
-
     }
 }

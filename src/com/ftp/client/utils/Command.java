@@ -69,8 +69,17 @@ public class Command {
     }
 
     //无动作
-    public static String NOOP() { return "NOOP"; }
+    public static String NOOP() {
+        return "NOOP";
+    }
 
     //通知服务器，从数据通道发送给你的数据要附加到这个文件末尾
-    public static String APPE(String filename) { return "APPE " + filename; }
+    public static String APPE(String filename) {
+        return "APPE " + filename;
+    }
+
+    // 获取目录下文件列表
+    public static String DIR() {
+        return "DIR";
+    }
 }
