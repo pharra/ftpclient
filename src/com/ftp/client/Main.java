@@ -14,11 +14,9 @@ import java.util.Arrays;
 public class Main {
 
 
-    //初始化参数--------------------------------
-    static String url = "127.0.0.1";
-    static String username = "liyz";
-    static String password = "000000";
-    //初始化参数--------------------------------
+    private String url = "127.0.0.1";
+    private String username = "chasingme@outlook.com";
+    private String password = "";
 
 
     private JFrame frame;

@@ -3,6 +3,7 @@ package com.ftp.client.core;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import com.ftp.client.utils.Command;
@@ -46,8 +47,16 @@ public class Core {
     }
 
     public String[] exec(String command, String shall) throws IOException {
+        ArrayList<String> tmp = new ArrayList<>();
         writer.println(command);
-        String[] response = (String[]) reader.lines().toArray();
+        do {
+            String res = reader.readLine();
+            if (res == null) {
+                break;
+            }
+            tmp.add(res);
+        } while (true);
+        String[] response = (String[]) tmp.toArray();
         if (shall == null) {
             return response;
         }
