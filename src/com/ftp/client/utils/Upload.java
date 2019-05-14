@@ -118,7 +118,7 @@ public class Upload extends ConnectionMode{
     }
 
     //测试代码
-    /*
+
     private void login() throws IOException {
         this.core.exec(Command.USER(this.username), "331");
         this.core.exec(Command.PASS(this.password), "230");
@@ -130,6 +130,6 @@ public class Upload extends ConnectionMode{
         File f = new File(file_path);
         long size = f.length();;
         System.out.println(size);
-        upload.uploadBrokenFile("D:\\2018.docx","2018.docx",size);
-    }*/
+        upload.uploadPasv("D:\\2018.docx");
+    }
 }

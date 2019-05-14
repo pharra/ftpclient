@@ -52,7 +52,11 @@ abstract class ConnectionMode {
      * @throws IOException
      */
     protected int getPasvPort() throws IOException {
-        String response = this.core.exec(Command.PASV(),"227");
+        String[] responses = this.core.exec(Command.PASV(),"227");
+        if(responses.length==0){
+            throw new IOException("This command has no responses.");
+        }
+        String response = responses[0];
         int opening = response.indexOf('(');
         int closing = response.indexOf(')', opening + 1);
         String dataLink = response.substring(opening + 1, closing);
