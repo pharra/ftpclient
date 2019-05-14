@@ -3,6 +3,7 @@ package com.ftp.client.core;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.stream.Stream;
 
 import com.ftp.client.utils.Command;
 
@@ -44,15 +45,14 @@ public class Core {
         this.exec(Command.PASS(this.password), "230");
     }
 
-    public String exec(String command, String shall) throws IOException {
+    public String[] exec(String command, String shall) throws IOException {
         writer.println(command);
-        String response = reader.readLine();
-        System.out.println(response);
+        String[] response = (String[]) reader.lines().toArray();
         if (shall == null) {
             return response;
         }
 
-        if (!response.startsWith(shall)) {
+        if (!response[0].startsWith(shall)) {
             throw new IOException("exec failed:" + response);
         }
         return response;
