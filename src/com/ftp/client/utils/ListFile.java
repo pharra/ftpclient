@@ -16,7 +16,7 @@ public class ListFile {
 
     public ArrayList<File> dir(String pathName) throws IOException {
         ArrayList<File> files = new ArrayList<File>();
-        String[] response = this.core.exec(Command.DIR(), "200");
+        String[] response = this.core.exec(Command.DIR(), "200", "226");
         if (!response[1].startsWith("125")) {
             throw new IOException("exec failed:" + response[1]);
         }

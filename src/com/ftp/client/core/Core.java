@@ -46,16 +46,20 @@ public class Core {
         this.exec(Command.PASS(this.password), "230");
     }
 
-    public String[] exec(String command, String shall) throws IOException {
+    public String[] exec(String command, String shall, String end) throws IOException {
         ArrayList<String> tmp = new ArrayList<>();
         writer.println(command);
-        do {
-            String res = reader.readLine();
-            if (res == null) {
-                break;
-            }
-            tmp.add(res);
-        } while (true);
+        if (end == null) {
+            tmp.add(reader.readLine());
+        } else {
+            do {
+                String res = reader.readLine();
+                tmp.add(res);
+                if (res.startsWith(end)) {
+                    break;
+                }
+            } while (true);
+        }
         String[] response = (String[]) tmp.toArray();
         if (shall == null) {
             return response;
@@ -65,6 +69,10 @@ public class Core {
             throw new IOException("exec failed:" + response[0]);
         }
         return response;
+    }
+
+    public String[] exec(String command, String shall) throws IOException {
+        return this.exec(command, shall, null);
     }
 
     // 主动模式
