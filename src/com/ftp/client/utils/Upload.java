@@ -55,7 +55,7 @@ public class Upload extends ConnectionMode{
     }
 
     /**
-     * 被动模式 文件下载
+     * 被动模式 上传文件
      * @param file_path 上传文件的文件路径
      * @throws Exception
      */
@@ -117,9 +117,9 @@ public class Upload extends ConnectionMode{
         this.core.exec(Command.NOOP(),"226");
     }
 
-    //测试代码
 
-    private void login() throws IOException {
+    //测试代码
+    /*private void login() throws IOException {
         this.core.exec(Command.USER(this.username), "331");
         this.core.exec(Command.PASS(this.password), "230");
     }
@@ -130,6 +130,6 @@ public class Upload extends ConnectionMode{
         File f = new File(file_path);
         long size = f.length();;
         System.out.println(size);
-        upload.uploadPasv("D:\\2018.docx");
-    }
+        upload.uploadBrokenFile("D:\\2018.docx","2018.docx",size);
+    }*/
 }

@@ -110,6 +110,7 @@ public class Download extends ConnectionMode {
         File f = new File(file_path);
         long size = download.getFileSize(f);
         System.out.println(size);
-        download.downloadBrokenFile("321.pdf","D:\\",size);
+        //download.downloadBrokenFile("321.pdf","D:\\",size);
+        download.downloadPasv("321.pdf","D:\\");
     }*/
 }
