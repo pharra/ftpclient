@@ -60,7 +60,8 @@ public class Core {
                 }
             } while (true);
         }
-        String[] response = (String[]) tmp.toArray();
+        String[] response = new String[tmp.size()];
+        response = tmp.toArray(response);
         if (shall == null) {
             return response;
         }
