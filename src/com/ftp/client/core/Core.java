@@ -32,6 +32,8 @@ public class Core {
             throw new IOException("unknow response after connect!");
         }
 
+        this.login();
+
 
     }
 
@@ -44,6 +46,15 @@ public class Core {
         this.exec(Command.USER(this.username), "331");
 
         this.exec(Command.PASS(this.password), "230");
+    }
+
+    public void quit() {
+        try {
+            this.exec(Command.QUIT(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String[] exec(String command, String shall, String end) throws IOException {
