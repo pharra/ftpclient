@@ -8,11 +8,11 @@ public class Command {
     }
 
     //更改当前目录
-    public static String CD(String directory){return "CD " + directory;}
+    public static String CWD(String directory){return "CWD " + directory;}
 
     // 在服务器上建立指定目录
-    public static String MKDIR(String directory) {
-        return "MKDIR " + directory;
+    public static String XMKD(String directory) {
+        return "XMKD " + directory;
     }
 
     // 列出指定目录内容
@@ -46,8 +46,8 @@ public class Command {
     }
 
     // 在服务器上删除指定目录
-    public static String RMDIR(String directory) {
-        return "RMDIR " + directory;
+    public static String XRMD(String directory) {
+        return "XRMD " + directory;
     }
 
 
