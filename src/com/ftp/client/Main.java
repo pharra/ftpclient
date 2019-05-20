@@ -1,5 +1,7 @@
 package com.ftp.client;
 
+import com.ftp.client.core.CoreFactory;
+
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ public class Main {
     private JTextField usernameText;
     private JPasswordField passwordText;
     private JButton login;
+    private JButton quit;
     private JButton upload;
     private JButton refresh;
 
@@ -59,6 +62,7 @@ public class Main {
         this.urlText = new JTextField();
         this.urlText.setFont(new Font("宋体", Font.PLAIN, 14));
         this.urlText.setBounds(60, 10, 100, 25);
+        this.urlText.setText(this.url);
         this.frame.getContentPane().add(this.urlText);
 
         // username
@@ -70,6 +74,7 @@ public class Main {
         this.usernameText = new JTextField();
         this.usernameText.setFont(new Font("宋体", Font.PLAIN, 14));
         this.usernameText.setBounds(260, 10, 100, 25);
+        this.usernameText.setText(this.username);
         this.frame.getContentPane().add(this.usernameText);
 
         // password
@@ -95,14 +100,38 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 try {
                     url = urlText.getText().trim();
-                    username = usernameText.getText().trim();
-                    password = Arrays.toString(passwordText.getPassword()).trim();
-
-
+                    username = usernameText.getText();
+                    password = passwordText.getText();
+                    CoreFactory.getCore(url, username, password);
+                    System.out.println("login successful");
+                    login.setVisible(false);
+                    quit.setVisible(true);
                 } catch (Exception e1) {
                     e1.printStackTrace();
-                    JOptionPane.showConfirmDialog(null, "用户名或者密码错误\n username：" + username, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "用户名或者密码错误\n username：" + username, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+
+        //登录按钮------------------------------------------------
+        this.quit = new JButton("退出");
+        this.quit.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.quit.setBackground(UIManager.getColor("Button.highlight"));
+        this.quit.setBounds(10, 50, 100, 25);
+        this.quit.setVisible(false);
+        this.frame.getContentPane().add(this.quit);
+        this.quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                url = urlText.getText().trim();
+                username = usernameText.getText();
+                password = passwordText.getText();
+                CoreFactory.quit();
+                System.out.println("quit successful");
+                quit.setVisible(false);
+                login.setVisible(true);
+
             }
         });
 

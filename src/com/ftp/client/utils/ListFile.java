@@ -14,7 +14,7 @@ public class ListFile {
         this.core = CoreFactory.getCore(url, username, password);
     }
 
-    public ArrayList<File> dir(String pathName) throws IOException {
+    public ArrayList<File> dir() throws IOException {
         ArrayList<File> files = new ArrayList<File>();
         String[] response = this.core.exec(Command.DIR(), "200", "226");
         if (!response[1].startsWith("125")) {

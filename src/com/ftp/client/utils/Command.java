@@ -30,7 +30,7 @@ public class Command {
 
     // 从 FTP服务器上退出登录
     public static String QUIT() {
-        return "PASS";
+        return "QUIT";
     }
 
     // 由特定偏移量重启文件传递
