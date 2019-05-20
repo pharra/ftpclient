@@ -7,10 +7,12 @@ public class Command {
         return "LIST " + name;
     }
 
+    //更改当前目录
+    public static String CD(String directory){return "CD " + directory;}
 
     // 在服务器上建立指定目录
-    public static String MKD(String directory) {
-        return "MKD " + directory;
+    public static String MKDIR(String directory) {
+        return "MKDIR " + directory;
     }
 
     // 列出指定目录内容
@@ -44,8 +46,8 @@ public class Command {
     }
 
     // 在服务器上删除指定目录
-    public static String RMD(String directory) {
-        return "RMD " + directory;
+    public static String RMDIR(String directory) {
+        return "RMDIR " + directory;
     }
 
 
