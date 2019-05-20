@@ -81,7 +81,7 @@ public class Command {
     }
 
     // 获取目录下文件列表
-    public static String DIR() {
-        return "DIR";
+    public static String LIST() {
+        return "LIST";
     }
 }

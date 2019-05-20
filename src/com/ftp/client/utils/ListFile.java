@@ -14,15 +14,15 @@ public class ListFile {
         this.core = CoreFactory.getCore(url, username, password);
     }
 
-    public ArrayList<File> dir() throws IOException {
+    public ArrayList<File> list() throws IOException {
         ArrayList<File> files = new ArrayList<File>();
-        String[] response = this.core.exec(Command.DIR(), "200", "226");
+        String[] response = this.core.exec(Command.LIST(), "200", "226");
         if (!response[1].startsWith("125")) {
             throw new IOException("exec failed:" + response[1]);
         }
         for (int i = 2; i < response.length - 2; i++) {
             File file = new File();
-            file.setIsDir(response[i].split(" ")[2].contains("<DIR>"));
+            file.setIsDir(response[i].split(" ")[2].contains("<LIST>"));
             file.setName(response[i].split(" ")[3]);
             files.add(file);
         }
