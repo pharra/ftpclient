@@ -9,7 +9,7 @@ public class Directory extends ConnectionMode{
 
     private Core core;
 
-    public Directory(String url,String username,String password) throws Exception {
+    public Directory(String url,String username,String password) throws IOException {
         this.core = CoreFactory.getCore(url, username, password);
     }
 
