@@ -20,7 +20,6 @@ public class Core {
 
         this.url = url;
         Socket socket = new Socket(url, port);//建立与服务器的socket连接
-
         this.username = username;
         this.password = password;
 

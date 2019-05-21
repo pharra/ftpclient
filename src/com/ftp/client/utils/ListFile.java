@@ -19,7 +19,9 @@ public class ListFile extends ConnectionMode {
         try {
             this.core.exec(Command.CWD(name), "250");
         } catch (IOException e) {
-
+            this.core.exec(null, null);
+            this.core.exec(null, null);
+            this.core.exec(null, null);
             return false;
         }
         this.core.exec(Command.CWD(".."), "250");
