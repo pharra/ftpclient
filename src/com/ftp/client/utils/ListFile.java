@@ -10,14 +10,26 @@ import java.util.ArrayList;
 
 public class ListFile extends ConnectionMode {
 
-    public ListFile(String url, String username, String password) throws Exception {
+    public ListFile(String url, String username, String password) throws IOException {
         this.core = CoreFactory.getCore(url, username, password);
+    }
+
+
+    private boolean isDir(String name) throws IOException {
+        try {
+            this.core.exec(Command.CWD(name), "250");
+        } catch (IOException e) {
+
+            return false;
+        }
+        this.core.exec(Command.CWD(".."), "250");
+        return true;
     }
 
     public ArrayList<File> list() throws IOException {
         int dataPort = this.getPasvPort();
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
-        this.core.exec(Command.LIST(), "150");
+        this.core.exec(Command.NLST(), "150");
         BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
         char[] buffer = new char[4096];
         int bytesRead = 0;
@@ -25,16 +37,16 @@ public class ListFile extends ConnectionMode {
         while ((bytesRead = input.read(buffer)) != -1) {
             tmp.append(buffer, 0, bytesRead);
         }
-
+        dataSocket.close();
+        this.core.exec(null, "226");
         ArrayList<File> files = new ArrayList<File>();
         for (String info : tmp.toString().replace("\r", "").split("\n")) {
             File file = new File();
-            String[] infoList = info.split(" ");
-            file.setName(infoList[infoList.length - 1]);
-            file.setIsDir(infoList[0].startsWith("d"));
+            file.setName(info);
+            file.setIsDir(this.isDir(file.getName()));
             files.add(file);
         }
-        dataSocket.close();
+
         return files;
     }
 //

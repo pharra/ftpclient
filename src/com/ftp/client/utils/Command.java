@@ -84,4 +84,8 @@ public class Command {
     public static String LIST() {
         return "LIST";
     }
+
+    public static String NLST(){
+        return "NLST .";
+    }
 }
