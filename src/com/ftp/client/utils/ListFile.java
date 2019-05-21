@@ -4,31 +4,43 @@ import com.ftp.client.core.CoreFactory;
 import com.ftp.client.core.Core;
 import com.ftp.client.entity.File;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 
-public class ListFile {
-    private Core core;
+public class ListFile extends ConnectionMode {
 
     public ListFile(String url, String username, String password) throws Exception {
         this.core = CoreFactory.getCore(url, username, password);
     }
 
     public ArrayList<File> list() throws IOException {
-        ArrayList<File> files = new ArrayList<File>();
-        String[] response = this.core.exec(Command.LIST(), "200", "226");
-        if (!response[1].startsWith("125")) {
-            throw new IOException("exec failed:" + response[1]);
+        int dataPort = this.getPasvPort();
+        Socket dataSocket = this.core.usePortConnectRemote(dataPort);
+        this.core.exec(Command.LIST(), "150");
+        BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
+        char[] buffer = new char[4096];
+        int bytesRead = 0;
+        StringBuffer tmp = new StringBuffer();
+        while ((bytesRead = input.read(buffer)) != -1) {
+            tmp.append(buffer, 0, bytesRead);
         }
-        for (int i = 2; i < response.length - 2; i++) {
+
+        ArrayList<File> files = new ArrayList<File>();
+        for (String info : tmp.toString().replace("\r", "").split("\n")) {
             File file = new File();
-            file.setIsDir(response[i].split(" ")[2].contains("<LIST>"));
-            file.setName(response[i].split(" ")[3]);
+            String[] infoList = info.split(" ");
+            file.setName(infoList[infoList.length - 1]);
+            file.setIsDir(infoList[0].startsWith("d"));
             files.add(file);
         }
-        if (!response[response.length - 2].startsWith("226")) {
-            throw new IOException("exec failed:" + response[response.length - 2]);
-        }
+        dataSocket.close();
         return files;
     }
+//
+//    //测试代码
+//    public static void main(String[] args) throws Exception {
+//        ListFile listFile = new ListFile("192.168.1.1", "root", "wf");
+//        listFile.list();
+//    }
 }
