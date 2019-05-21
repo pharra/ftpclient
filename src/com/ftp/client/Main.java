@@ -3,23 +3,30 @@ package com.ftp.client;
 import com.ftp.client.core.CoreFactory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
-import java.awt.Toolkit;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
 
 
-import java.io.File;
-import java.util.Arrays;
+import com.ftp.client.entity.File;
+import com.ftp.client.utils.Directory;
+import com.ftp.client.utils.Download;
+import com.ftp.client.utils.ListFile;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 
 
-    private String url = "127.0.0.1";
-    private String username = "chasingme@outlook.com";
+    private String url = "192.168.1.1";
+    private String username = "root";
     private String password = "";
-
 
     private JFrame frame;
     private JTable table;
@@ -89,7 +96,7 @@ public class Main {
         this.frame.getContentPane().add(this.passwordText);
 
 
-        //登录按钮------------------------------------------------
+        // 登录按钮
         this.login = new JButton("登录");
         this.login.setFont(new Font("宋体", Font.PLAIN, 14));
         this.login.setBackground(UIManager.getColor("Button.highlight"));
@@ -104,6 +111,7 @@ public class Main {
                     password = passwordText.getText();
                     CoreFactory.getCore(url, username, password);
                     System.out.println("login successful");
+                    setTable((new ListFile(url, username, password)).list());
                     login.setVisible(false);
                     quit.setVisible(true);
                 } catch (Exception e1) {
@@ -113,7 +121,7 @@ public class Main {
             }
         });
 
-        //登录按钮------------------------------------------------
+        // 退出按钮
         this.quit = new JButton("退出");
         this.quit.setFont(new Font("宋体", Font.PLAIN, 14));
         this.quit.setBackground(UIManager.getColor("Button.highlight"));
@@ -131,12 +139,13 @@ public class Main {
                 System.out.println("quit successful");
                 quit.setVisible(false);
                 login.setVisible(true);
+                ((DefaultTableModel) table.getModel()).setColumnCount(0);
 
             }
         });
 
 
-        //上传按钮--------------------------------------------------
+        // 上传按钮
         this.upload = new JButton("上传");
         this.upload.setFont(new Font("宋体", Font.PLAIN, 14));
         this.upload.setBackground(UIManager.getColor("Button.highlight"));
@@ -144,8 +153,7 @@ public class Main {
         this.frame.getContentPane().add(this.upload);
         this.upload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                //上传点击按钮触发------------------------------------
-                System.out.println("上传！！！！！");
+                // 上传点击按钮
                 int result = 0;
                 File file = null;
                 String path = null;
@@ -162,25 +170,22 @@ public class Main {
                     System.out.println("path: " + path);
                     try {
                         System.out.println("文件上传成功");
-                    } catch (Exception e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-                //上传点击按钮触发------------------------------------
+
             }
         });
 
-        //上传按钮--------------------------------------------------
 
-
-        //刷新按钮--------------------------------------------------
+        //刷新按钮
         this.refresh = new JButton("刷新");
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
 
-                    setTableInfo();
+                    setTable((new ListFile(url, username, password)).list());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -190,51 +195,99 @@ public class Main {
         this.refresh.setBackground(UIManager.getColor("Button.highlight"));
         this.refresh.setBounds(230, 50, 100, 25);
         this.frame.getContentPane().add(this.refresh);
-        //刷新按钮--------------------------------------------------
+
+
+        // 加滚动条
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 100, 580, 450);
+        frame.getContentPane().add(scrollPane);
+
+
+        this.table = new JTable();
+        scrollPane.setViewportView(this.table);
+        this.table.setColumnSelectionAllowed(true);
+        this.table.setCellSelectionEnabled(true);
+        this.table.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+        this.table.setBorder(new LineBorder(new Color(0, 0, 0)));
+        this.table.setToolTipText("可以点击下载");
+        this.table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+
+                if (table.columnAtPoint(mouseEvent.getPoint()) == 2) {
+                    int row = table.rowAtPoint(mouseEvent.getPoint());
+                    String path = table.getValueAt(row, 0).toString();
+                    if (table.getValueAt(row, 2).toString().equals("进入")) {
+                        try {
+                            (new Directory(url, username, password)).ChangeDirectory(path);
+                            setTable((new ListFile(url, username, password)).list());
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(null, "进入目录错误", "提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        int result = 0;
+                        String local_path = null;
+                        JFileChooser fileChooser = new JFileChooser();
+                        FileSystemView fsv = FileSystemView.getFileSystemView();
+                        System.out.println(fsv.getHomeDirectory());                //得到桌面路径
+                        fileChooser.setCurrentDirectory(fsv.getHomeDirectory());
+                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                        fileChooser.setDialogTitle("请选择要下载到的文件夹地址...");
+                        fileChooser.setApproveButtonText("确定");
+                        result = fileChooser.showOpenDialog(null);
+                        if (JFileChooser.APPROVE_OPTION == result) {
+                            local_path = fileChooser.getSelectedFile().getPath() + "/" + path;
+                            java.io.File file = new java.io.File(local_path + ".part");
+                            java.io.File local_file = new java.io.File(local_path);
+                            if (local_file.exists() && !local_file.canWrite()) {
+                                JOptionPane.showMessageDialog(null, "文件没有写入权限", "提示", JOptionPane.ERROR_MESSAGE);
+                            }
+                            long size = 0;
+                            if (file.exists()) {
+                                size = file.length();
+                                JOptionPane.showMessageDialog(null, "下载成功未完成，使用断点续传模式", "提示", JOptionPane.PLAIN_MESSAGE);
+                            }
+                            try {
+                                (new Download(url, username, password)).downloadBrokenFile(path, local_path + ".part", size);
+                                if (!file.renameTo(local_file)) {
+                                    JOptionPane.showMessageDialog(null, "下载文件成功，创建文件失败", "提示", JOptionPane.ERROR_MESSAGE);
+                                }
+                                JOptionPane.showMessageDialog(null, "下载成功", "提示", JOptionPane.PLAIN_MESSAGE);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
     }
 
 
-    //显示基本信息-----------------------------------------------
-    private void setTableInfo() {
-//        //table数据初始化  从FTP读取所有文件
-//        String[][] data1 = new String[file.length][4];
-//        for (int row = 0; row < file.length; row++) {
-//
-//            data1[row][0] = file[row].getName();
-//            if (file[row].isDirectory()) {
-//                data1[row][1] = "文件夹";
-//            } else if (file[row].isFile()) {
-//                String[] geshi = file[row].getName().split("\\.");
-//                data1[row][1] = geshi[1];
-//            }
-//            data1[row][2] = file[row].getSize() + "";
-//            data1[row][3] = "下载";
-//        }
+    private void setTable(ArrayList<File> files) {
+        // table数据初始化
+        String[][] data1 = new String[files.size()][3];
+        for (int row = 0; row < files.size(); row++) {
+
+            data1[row][0] = files.get(row).getName();
+            if (files.get(row).isDir()) {
+                data1[row][1] = "文件夹";
+                data1[row][2] = "进入";
+            } else {
+                data1[row][1] = "文件";
+                data1[row][2] = "下载";
+            }
+        }
 
 
-//        //table列名-----------------------------------------------------
-//        String[] columnNames = {"文件", "文件类型", "文件大小(B)", ""};
-//        DefaultTableModel model = new DefaultTableModel();
-//        model.setDataVector(data1, columnNames);
-//
-//        //加滚动条--------------------------------------------------------
-//        JScrollPane scrollPane = new JScrollPane();
-//        scrollPane.setBounds(32, 73, 400, 384);
-//        frame.getContentPane().add(scrollPane);
-//        //加滚动条-----------------------------------------------------
-//
-//        //table功能------------------------------------------------------
-//        table = new JTable(model);
-//        scrollPane.setViewportView(table);
-//        table.setColumnSelectionAllowed(true);
-//        table.setCellSelectionEnabled(true);
-//        table.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-//        table.setBorder(new LineBorder(new Color(0, 0, 0)));
-//        table.getColumnModel().getColumn(0).setPreferredWidth(200);
-//        table.setToolTipText("可以点击下载");
-//
-//        //table button初始化(最后一列的按键)--------------------
-//        ButtonColumn buttonsColumn = new ButtonColumn(table, 3);
+        //table列名-----------------------------------------------------
+        String[] columnNames = {"文件", "文件类型", ""};
+        DefaultTableModel model = new DefaultTableModel();
+        model.setDataVector(data1, columnNames);
+
+        this.table.setModel(model);
+        this.table.getColumnModel().getColumn(0).setPreferredWidth(200);
+
     }
 }
