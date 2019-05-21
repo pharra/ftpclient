@@ -58,7 +58,9 @@ public class Core {
     }
 
     public String exec(String command, String shall) throws IOException {
-        writer.println(command);
+        if (command != null) {
+            writer.println(command);
+        }
 
         String response = reader.readLine();
         if (shall == null) {
