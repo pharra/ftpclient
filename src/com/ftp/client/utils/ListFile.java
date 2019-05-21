@@ -29,7 +29,7 @@ public class ListFile extends ConnectionMode {
     public ArrayList<File> list() throws IOException {
         int dataPort = this.getPasvPort();
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
-        this.core.exec(Command.NLST(), "150");
+        this.core.exec(Command.NLST(), null);
         BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
         char[] buffer = new char[4096];
         int bytesRead = 0;

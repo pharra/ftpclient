@@ -26,9 +26,10 @@ public class Upload extends ConnectionMode{
     /**
      * 主动模式 上传文件
      * @param file_path 上传文件的文件路径
+     * @param to_path FTP中的文件相对路径
      * @throws IOException
      */
-    public void uploadPort(String file_path) throws IOException{
+    public void uploadPort(String file_path,String to_path) throws IOException{
         File f = new File(file_path);
         if(!f.exists()){
             throw new IOException("File not Exists...");
@@ -39,7 +40,7 @@ public class Upload extends ConnectionMode{
         int dataPort = bits[0]*256+bits[1];
         //System.out.println(dataPort);
         this.core.exec(Command.PORT(this.handleUrl()+bits[0]+","+bits[1]),"200");
-        this.core.exec(Command.STOR(f.getName()),"150");
+        this.core.exec(Command.STOR(to_path),"150");
         Socket dataSocket = this.core.listenPort(dataPort);
         BufferedOutputStream output = new BufferedOutputStream(dataSocket.getOutputStream());
         byte[] buffer = new byte[4096];
@@ -57,9 +58,10 @@ public class Upload extends ConnectionMode{
     /**
      * 被动模式 上传文件
      * @param file_path 上传文件的文件路径
+     * @param to_path FTP中的文件相对路径
      * @throws IOException
      */
-    public void uploadPasv(String file_path) throws IOException{
+    public void uploadPasv(String file_path,String to_path) throws IOException{
         File f = new File(file_path);
         if(!f.exists()){
             throw new IOException("File not Exists...");
@@ -67,7 +69,7 @@ public class Upload extends ConnectionMode{
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         int dataPort = this.getPasvPort();
-        this.core.exec(Command.STOR(f.getName()),"150");
+        this.core.exec(Command.STOR(to_path),"150");
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
         BufferedOutputStream output = new BufferedOutputStream(
                 dataSocket.getOutputStream());
@@ -130,6 +132,6 @@ public class Upload extends ConnectionMode{
         File f = new File(file_path);
         long size = f.length();;
         System.out.println(size);
-        upload.uploadBrokenFile("D:\\2018.docx","2018.docx",size);
+        upload.uploadPasv("D:\\2018.docx","hh\\2018.docx");
     }*/
 }

@@ -236,7 +236,7 @@ public class Main {
                         fileChooser.setApproveButtonText("确定");
                         result = fileChooser.showOpenDialog(null);
                         if (JFileChooser.APPROVE_OPTION == result) {
-                            local_path = fileChooser.getSelectedFile().getPath() + "/" + path;
+                            local_path = fileChooser.getSelectedFile().getPath() + "\\" + path;
                             java.io.File file = new java.io.File(local_path + ".part");
                             java.io.File local_file = new java.io.File(local_path);
                             if (local_file.exists() && !local_file.canWrite()) {

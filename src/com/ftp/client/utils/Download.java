@@ -23,7 +23,7 @@ public class Download extends ConnectionMode {
 
     private void downFile(String from_file_name, String to_path, Socket dataSocket, boolean append) throws IOException {
         BufferedOutputStream output = new BufferedOutputStream(
-                new FileOutputStream(new File(to_path, from_file_name), append));
+                new FileOutputStream(new File(to_path), append));
         BufferedInputStream input = new BufferedInputStream(
                 dataSocket.getInputStream());
         byte[] buffer = new byte[4096];
@@ -112,6 +112,6 @@ public class Download extends ConnectionMode {
         long size = download.getFileSize(f);
         System.out.println(size);
         //download.downloadBrokenFile("321.pdf","D:\\",size);
-        download.downloadPasv("321.pdf","D:\\");
+        download.downloadPasv("321.pdf","D:\\321.pdf.part");
     }*/
 }
