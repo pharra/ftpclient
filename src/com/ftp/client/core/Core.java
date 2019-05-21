@@ -57,35 +57,20 @@ public class Core {
 
     }
 
-    public String[] exec(String command, String shall, String end) throws IOException {
-        ArrayList<String> tmp = new ArrayList<>();
+    public String exec(String command, String shall) throws IOException {
         writer.println(command);
-        if (end == null) {
-            tmp.add(reader.readLine());
-        } else {
-            do {
-                String res = reader.readLine();
-                tmp.add(res);
-                if (res.startsWith(end)) {
-                    break;
-                }
-            } while (true);
-        }
-        String[] response = new String[tmp.size()];
-        response = tmp.toArray(response);
+
+        String response = reader.readLine();
         if (shall == null) {
             return response;
         }
 
-        if (!response[0].startsWith(shall)) {
-            throw new IOException("exec failed:" + response[0]);
+        if (!response.startsWith(shall)) {
+            throw new IOException("exec failed:" + response);
         }
         return response;
     }
 
-    public String[] exec(String command, String shall) throws IOException {
-        return this.exec(command, shall, null);
-    }
 
     // 主动模式
     public Socket listenPort(int port) throws IOException {
