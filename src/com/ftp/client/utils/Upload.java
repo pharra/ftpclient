@@ -13,7 +13,7 @@ public class Upload extends ConnectionMode{
     private String username;
     private String password;
 
-    public Upload(String url,String username,String password) throws Exception{
+    public Upload(String url,String username,String password) throws IOException{
         this.url=url;
         this.username=username;
         this.password=password;
@@ -26,12 +26,12 @@ public class Upload extends ConnectionMode{
     /**
      * 主动模式 上传文件
      * @param file_path 上传文件的文件路径
-     * @throws Exception
+     * @throws IOException
      */
-    public void uploadPort(String file_path) throws Exception{
+    public void uploadPort(String file_path) throws IOException{
         File f = new File(file_path);
         if(!f.exists()){
-            throw new Exception("File not Exists...");
+            throw new IOException("File not Exists...");
         }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
@@ -57,12 +57,12 @@ public class Upload extends ConnectionMode{
     /**
      * 被动模式 上传文件
      * @param file_path 上传文件的文件路径
-     * @throws Exception
+     * @throws IOException
      */
-    public void uploadPasv(String file_path) throws Exception{
+    public void uploadPasv(String file_path) throws IOException{
         File f = new File(file_path);
         if(!f.exists()){
-            throw new Exception("File not Exists...");
+            throw new IOException("File not Exists...");
         }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
@@ -90,12 +90,12 @@ public class Upload extends ConnectionMode{
      * @param file_path 上传文件的文件路径
      * @param file_name 在FTP服务器上已存在的文件名
      * @param size 在FTP服务器上已存在的文件长度（使用file.length()）
-     * @throws Exception
+     * @throws IOException
      */
-    public void uploadBrokenFile(String file_path,String file_name, long size) throws Exception{
+    public void uploadBrokenFile(String file_path,String file_name, long size) throws IOException{
         File f = new File(file_path);
         if(!f.exists()){
-            throw new Exception("File not Exists...");
+            throw new IOException("File not Exists...");
         }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
