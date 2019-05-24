@@ -37,6 +37,7 @@ public class Main {
     private JButton quit;
     private JButton upload;
     private JButton refresh;
+    private JButton createWorkDirectory;
 
     /**
      * Launch the application.
@@ -175,7 +176,7 @@ public class Main {
                             JOptionPane.showMessageDialog(null, "已有文件存在，使用断点续传功能", "提示", JOptionPane.PLAIN_MESSAGE);
                         }
                         (new Upload(url, username, password)).uploadBrokenFile(path, name, size);
-
+                        setTable((new ListFile(url, username, password)).list());
                         JOptionPane.showMessageDialog(null, "上传成功", "提示", JOptionPane.PLAIN_MESSAGE);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -189,7 +190,7 @@ public class Main {
 
         //刷新按钮
         this.refresh = new JButton("刷新");
-        refresh.addActionListener(new ActionListener() {
+        this.refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
 
@@ -205,21 +206,25 @@ public class Main {
         this.frame.getContentPane().add(this.refresh);
 
         //创建文件夹按钮
-        this.refresh = new JButton("创建文件夹");
-        refresh.addActionListener(new ActionListener() {
+        this.createWorkDirectory = new JButton("创建文件夹");
+        this.createWorkDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                try {
-
-                    setTable((new ListFile(url, username, password)).list());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                String name = JOptionPane.showInputDialog("输入文件夹名");
+                if (name != null) {
+                    try {
+                        (new Directory(url, username, password)).MakeDirectory(name);
+                        setTable((new ListFile(url, username, password)).list());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "创建文件夹失败", "提示", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
-        this.refresh.setFont(new Font("宋体", Font.PLAIN, 14));
-        this.refresh.setBackground(UIManager.getColor("Button.highlight"));
-        this.refresh.setBounds(340, 50, 100, 25);
-        this.frame.getContentPane().add(this.refresh);
+        this.createWorkDirectory.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.createWorkDirectory.setBackground(UIManager.getColor("Button.highlight"));
+        this.createWorkDirectory.setBounds(340, 50, 180, 25);
+        this.frame.getContentPane().add(this.createWorkDirectory);
 
 
         // 加滚动条
