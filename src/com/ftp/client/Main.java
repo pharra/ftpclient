@@ -37,6 +37,7 @@ public class Main {
     private JButton quit;
     private JButton upload;
     private JButton refresh;
+    private JButton createWorkDirectory;
 
     /**
      * Launch the application.
@@ -175,7 +176,7 @@ public class Main {
                             JOptionPane.showMessageDialog(null, "已有文件存在，使用断点续传功能", "提示", JOptionPane.PLAIN_MESSAGE);
                         }
                         (new Upload(url, username, password)).uploadBrokenFile(path, name, size);
-
+                        setTable((new ListFile(url, username, password)).list());
                         JOptionPane.showMessageDialog(null, "上传成功", "提示", JOptionPane.PLAIN_MESSAGE);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -189,7 +190,7 @@ public class Main {
 
         //刷新按钮
         this.refresh = new JButton("刷新");
-        refresh.addActionListener(new ActionListener() {
+        this.refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 try {
 
@@ -203,6 +204,27 @@ public class Main {
         this.refresh.setBackground(UIManager.getColor("Button.highlight"));
         this.refresh.setBounds(230, 50, 100, 25);
         this.frame.getContentPane().add(this.refresh);
+
+        //创建文件夹按钮
+        this.createWorkDirectory = new JButton("创建文件夹");
+        this.createWorkDirectory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String name = JOptionPane.showInputDialog("输入文件夹名");
+                if (name != null) {
+                    try {
+                        (new Directory(url, username, password)).MakeDirectory(name);
+                        setTable((new ListFile(url, username, password)).list());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "创建文件夹失败", "提示", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        this.createWorkDirectory.setFont(new Font("宋体", Font.PLAIN, 14));
+        this.createWorkDirectory.setBackground(UIManager.getColor("Button.highlight"));
+        this.createWorkDirectory.setBounds(340, 50, 180, 25);
+        this.frame.getContentPane().add(this.createWorkDirectory);
 
 
         // 加滚动条
@@ -272,6 +294,28 @@ public class Main {
                         }
                     }
                 }
+
+                if (table.columnAtPoint(mouseEvent.getPoint()) == 3) {
+                    int row = table.rowAtPoint(mouseEvent.getPoint());
+                    String path = table.getValueAt(row, 0).toString();
+                    if (table.getValueAt(row, 1).toString().equals("文件夹")) {
+                        try {
+                            (new Directory(url, username, password)).DeleteDirectory(path);
+                            setTable((new ListFile(url, username, password)).list());
+                            JOptionPane.showMessageDialog(null, "删除目录成功", "提示", JOptionPane.PLAIN_MESSAGE);
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(null, "删除目录错误", "提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        try {
+                            (new Directory(url, username, password)).DeleteFile(path);
+                            setTable((new ListFile(url, username, password)).list());
+                            JOptionPane.showMessageDialog(null, "删除文件成功", "提示", JOptionPane.PLAIN_MESSAGE);
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(null, "删除文件错误", "提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
             }
         });
 
@@ -300,7 +344,7 @@ public class Main {
             files.add(0, file);
         }
         int size = files.size();
-        String[][] data1 = new String[size][3];
+        String[][] data1 = new String[size][4];
         for (int row = 0; row < size; row++) {
 
             data1[row][0] = files.get(row).getName();
@@ -311,16 +355,16 @@ public class Main {
                 data1[row][1] = "文件";
                 data1[row][2] = "下载";
             }
+            data1[row][3] = "删除";
         }
 
 
         //table列名-----------------------------------------------------
-        String[] columnNames = {"文件", "文件类型", ""};
+        String[] columnNames = {"文件", "文件类型", "", ""};
         DefaultTableModel model = new DefaultTableModel();
         model.setDataVector(data1, columnNames);
 
         this.table.setModel(model);
-        this.table.getColumnModel().getColumn(0).setPreferredWidth(200);
 
     }
 }

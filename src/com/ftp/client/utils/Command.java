@@ -48,8 +48,8 @@ public class Command {
     }
 
     // 在服务器上删除指定目录
-    public static String XRMD(String directory) {
-        return "XRMD " + directory;
+    public static String RMD(String directory) {
+        return "RMD " + directory;
     }
 
 

@@ -2,15 +2,20 @@ package com.ftp.client.utils;
 
 import com.ftp.client.core.Core;
 import com.ftp.client.core.CoreFactory;
+import com.ftp.client.entity.File;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Directory extends ConnectionMode {
 
-    private Core core;
+    private String username;
+    private String password;
 
     public Directory(String url, String username, String password) throws IOException {
         this.core = CoreFactory.getCore(url, username, password);
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -36,12 +41,20 @@ public class Directory extends ConnectionMode {
      *
      * @param pathName 待删除空目录名
      */
-    public void DeleteNullDirectory(String pathName) throws IOException {
-        this.core.exec(Command.XRMD(pathName), "250");
+    public void DeleteDirectory(String pathName) throws IOException {
+        ArrayList<File> files = (new ListFile(url, username, password)).list(pathName);
+        for (File file : files) {
+            this.DeleteFile(pathName + "/" + file.getName());
+        }
+        this.core.exec(Command.RMD(pathName), "250");
     }
 
     public String GetWorkDirectory() throws IOException {
         return this.core.exec(Command.PWD(), "257").replace("\"", "\t").split("\t")[1];
+    }
+
+    public void DeleteFile(String file) throws IOException {
+        this.core.exec(Command.DELE(file), "250");
     }
 
     //测试代码
