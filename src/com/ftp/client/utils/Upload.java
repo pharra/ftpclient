@@ -125,8 +125,28 @@ public class Upload extends ConnectionMode {
      * 重命名
      */
     private void rename(String file_name) throws IOException{
-        this.core.exec(Command.RNFR(file_name+".part"),null);
-        this.core.exec(Command.RNTO(file_name),null);
+        String response = this.core.exec(Command.SIZE(file_name),null);
+        System.out.println(response);
+        if(!response.startsWith("550")){
+            this.core.exec(Command.DELE(file_name),"250");
+        }
+        this.core.exec(Command.RNFR(file_name+".part"),"350");
+        this.core.exec(Command.RNTO(file_name),"250");
+        /*int time = 0;
+        String[] tmp = file_name.split("\\.");
+        String name = tmp[0];
+        while(!response.startsWith("550")){
+            time++;
+            response = this.core.exec(Command.SIZE(name+" - ("+time+")"+"\\."+tmp[1]),null);
+        }
+        if(time!=0){
+            this.core.exec(Command.RNFR(file_name+".part"),null);
+            this.core.exec(Command.RNTO(name+" - ("+time+")"+"\\."+tmp[1]),null);
+
+        }else{
+            this.core.exec(Command.RNFR(file_name+".part"),null);
+            this.core.exec(Command.RNTO(file_name),null);
+        }*/
     }
 
     //测试代码
