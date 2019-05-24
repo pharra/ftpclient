@@ -62,6 +62,7 @@ public class Core {
         }
 
         String response = reader.readLine();
+        System.out.println("exec: " + command + ";get response: " + response);
         if (shall == null) {
             return response;
         }

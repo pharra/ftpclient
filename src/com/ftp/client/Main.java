@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class Main {
 
 
-    private String url = "192.168.1.1";
-    private String username = "root";
+    private String url = "127.0.0.1";
+    private String username = "test";
     private String password = "";
 
     private String workPath = "/";
@@ -326,9 +326,6 @@ public class Main {
             String[] split = response.split(" ");
             return Long.valueOf(split[1]);
         } catch (Exception e) {
-            CoreFactory.getCore(url, username, password).exec(null, null);
-            CoreFactory.getCore(url, username, password).exec(null, null);
-            CoreFactory.getCore(url, username, password).exec(null, null);
             return 0;
         }
     }
