@@ -48,8 +48,8 @@ public class Command {
     }
 
     // 在服务器上删除指定目录
-    public static String XRMD(String directory) {
-        return "XRMD " + directory;
+    public static String RMD(String directory) {
+        return "RMD " + directory;
     }
 
 
@@ -97,5 +97,9 @@ public class Command {
 
     public static String PWD() {
         return "PWD";
+    }
+
+    public static String DELE(String file) {
+        return "DELE " + file;
     }
 }

@@ -29,9 +29,13 @@ public class ListFile extends ConnectionMode {
     }
 
     public ArrayList<File> list() throws IOException {
+        return this.list(".");
+    }
+
+    public ArrayList<File> list(String path) throws IOException {
         int dataPort = this.getPasvPort();
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
-        this.core.exec(Command.NLST(), null);
+        this.core.exec(Command.NLST(path), null);
         BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
         char[] buffer = new char[4096];
         int bytesRead = 0;
