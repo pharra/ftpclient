@@ -293,9 +293,7 @@ public class Main {
                             }
                         }
                     }
-                }
-
-                if (table.columnAtPoint(mouseEvent.getPoint()) == 3) {
+                } else if (table.columnAtPoint(mouseEvent.getPoint()) == 3) {
                     int row = table.rowAtPoint(mouseEvent.getPoint());
                     String path = table.getValueAt(row, 0).toString();
                     if (table.getValueAt(row, 1).toString().equals("文件夹")) {
@@ -361,9 +359,11 @@ public class Main {
 
         //table列名-----------------------------------------------------
         String[] columnNames = {"文件", "文件类型", "", ""};
-        DefaultTableModel model = new DefaultTableModel();
-        model.setDataVector(data1, columnNames);
-
+        DefaultTableModel model = new DefaultTableModel(data1, columnNames) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         this.table.setModel(model);
 
     }
