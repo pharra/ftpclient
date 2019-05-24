@@ -279,8 +279,9 @@ public class Main {
 
     private long getFileSize(String file) throws IOException {
         try {
-            String response = CoreFactory.getCore(url, username, password).exec(Command.SIZE(file), "200");
-            return Long.getLong(response);
+            String response = CoreFactory.getCore(url, username, password).exec(Command.SIZE(file), "213");
+            String[] split = response.split(" ");
+            return  Long.valueOf(split[1]);
         } catch (Exception e) {
             CoreFactory.getCore(url, username, password).exec(null, null);
             CoreFactory.getCore(url, username, password).exec(null, null);
