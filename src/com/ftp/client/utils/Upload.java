@@ -100,11 +100,7 @@ public class Upload extends ConnectionMode {
         if (!f.exists()) {
             throw new IOException("File not Exists...");
         }
-        try {
-            String file_path_gbk = new String(file_path.getBytes(), "GBK");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        //String file_name_gbk = convert_gbk(file_name);
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         input.skip(size);
@@ -152,6 +148,15 @@ public class Upload extends ConnectionMode {
             this.core.exec(Command.RNFR(file_name+".part"),null);
             this.core.exec(Command.RNTO(file_name),null);
         }*/
+    }
+
+    public String convert_gbk(String str){
+        try {
+            return new String(str.getBytes(), "GBK");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     //测试代码
