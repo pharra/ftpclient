@@ -15,24 +15,24 @@ public class ListFile extends ConnectionMode {
     }
 
 
-//    private boolean isDir(String name) throws IOException {
-////        try {
-////            this.core.exec(Command.CWD(name), "250");
-////        } catch (IOException e) {
-////            return false;
-////        }
-////        this.core.exec(Command.CWD(".."), "250");
-////        return true;
-////    }
+    private boolean isDir(String name) throws IOException {
+        try {
+            this.core.exec(Command.CWD(name), "250");
+        } catch (IOException e) {
+            return false;
+        }
+        this.core.exec(Command.CWD(".."), "250");
+        return true;
+    }
 
     public ArrayList<File> list() throws IOException {
-        return this.list(".");
+        return this.list("");
     }
 
     public ArrayList<File> list(String path) throws IOException {
         int dataPort = this.getPasvPort();
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
-        this.core.exec(Command.LIST(path), "150");
+        this.core.exec(Command.NLST(path), "150");
         BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
         char[] buffer = new char[4096];
         int bytesRead = 0;
@@ -47,13 +47,13 @@ public class ListFile extends ConnectionMode {
             if (info.equals("")) {
                 continue;
             }
-            String[] infos = info.split(" ");
-            if (infos[infos.length - 1].equals(".")) {
-                continue;
-            }
+//            String[] infos = info.split(" ");
+//            if (infos[infos.length - 1].equals(".")) {
+//                continue;
+//            }
             File file = new File();
-            file.setName(infos[infos.length - 1]);
-            file.setIsDir(infos[0].startsWith("d"));
+            file.setName(info);
+            file.setIsDir(this.isDir(info));
             files.add(file);
         }
 
