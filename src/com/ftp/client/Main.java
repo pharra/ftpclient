@@ -336,10 +336,15 @@ public class Main {
     private void setTable(ArrayList<File> files) {
         // table数据初始化
         int size = files.size();
-        if (this.workPath.equals("/")) {
-            size = size - 1;
-            Predicate<File> predicate = (file) -> file.getName().equals("..");
-            files.removeIf(predicate);
+        if (!this.workPath.equals("/")) {
+            size += 1;
+            File file = new File();
+            file.setName("..");
+            file.setIsDir(true);
+            files.add(0, file);
+//            size = size - 1;
+//            Predicate<File> predicate = (file) -> file.getName().equals("..");
+//            files.removeIf(predicate);
         }
         String[][] data1 = new String[size][4];
         for (int row = 0; row < size; row++) {

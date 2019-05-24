@@ -44,7 +44,11 @@ public class Directory extends ConnectionMode {
     public void DeleteDirectory(String pathName) throws IOException {
         ArrayList<File> files = (new ListFile(url, username, password)).list(pathName);
         for (File file : files) {
-            this.DeleteFile(pathName + "/" + file.getName());
+            if (file.isDir()) {
+                this.DeleteDirectory(pathName + "/" + file.getName());
+            } else {
+                this.DeleteFile(pathName + "/" + file.getName());
+            }
         }
         this.core.exec(Command.RMD(pathName), "250");
     }

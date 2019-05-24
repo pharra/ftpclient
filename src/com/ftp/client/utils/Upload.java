@@ -5,6 +5,7 @@ import com.ftp.client.core.CoreFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 上传文件
@@ -100,13 +101,12 @@ public class Upload extends ConnectionMode {
         if (!f.exists()) {
             throw new IOException("File not Exists...");
         }
-        //String file_name_gbk = convert_gbk(file_name);
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         input.skip(size);
         int dataPort = this.getPasvPort();
-        this.core.exec(Command.APPE(file_name+".part"), "150");
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
+        this.core.exec(Command.APPE(file_name + ".part"), "150");
         BufferedOutputStream output = new BufferedOutputStream(
                 dataSocket.getOutputStream());
         byte[] buffer = new byte[4096];
@@ -125,14 +125,14 @@ public class Upload extends ConnectionMode {
     /**
      * 重命名
      */
-    private void rename(String file_name) throws IOException{
-        String response = this.core.exec(Command.SIZE(file_name),null);
+    private void rename(String file_name) throws IOException {
+        String response = this.core.exec(Command.SIZE(file_name), null);
         System.out.println(response);
-        if(!response.startsWith("550")){
-            this.core.exec(Command.DELE(file_name),"250");
+        if (!response.startsWith("550")) {
+            this.core.exec(Command.DELE(file_name), "250");
         }
-        this.core.exec(Command.RNFR(file_name+".part"),"350");
-        this.core.exec(Command.RNTO(file_name),"250");
+        this.core.exec(Command.RNFR(file_name + ".part"), "350");
+        this.core.exec(Command.RNTO(file_name), "250");
         /*int time = 0;
         String[] tmp = file_name.split("\\.");
         String name = tmp[0];
@@ -148,15 +148,6 @@ public class Upload extends ConnectionMode {
             this.core.exec(Command.RNFR(file_name+".part"),null);
             this.core.exec(Command.RNTO(file_name),null);
         }*/
-    }
-
-    public String convert_gbk(String str){
-        try {
-            return new String(str.getBytes(), "GBK");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     //测试代码

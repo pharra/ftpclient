@@ -15,15 +15,15 @@ public class ListFile extends ConnectionMode {
     }
 
 
-    private boolean isDir(String name) throws IOException {
-        try {
-            this.core.exec(Command.CWD(name), "250");
-        } catch (IOException e) {
-            return false;
-        }
-        this.core.exec(Command.CWD(".."), "250");
-        return true;
-    }
+//    private boolean isDir(String name) throws IOException {
+////        try {
+////            this.core.exec(Command.CWD(name), "250");
+////        } catch (IOException e) {
+////            return false;
+////        }
+////        this.core.exec(Command.CWD(".."), "250");
+////        return true;
+////    }
 
     public ArrayList<File> list() throws IOException {
         return this.list(".");
@@ -53,7 +53,7 @@ public class ListFile extends ConnectionMode {
             }
             File file = new File();
             file.setName(infos[infos.length - 1]);
-            file.setIsDir(this.isDir(file.getName()));
+            file.setIsDir(infos[0].startsWith("d"));
             files.add(file);
         }
 
