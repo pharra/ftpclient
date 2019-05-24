@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class Main {
 
@@ -333,16 +334,14 @@ public class Main {
 
     private void setTable(ArrayList<File> files) {
         // table数据初始化
-        if (!this.workPath.equals("/")) {
-            File file = new File();
-            file.setName("..");
-            file.setIsDir(true);
-            files.add(0, file);
-        }
         int size = files.size();
+        if (this.workPath.equals("/")) {
+            size = size - 1;
+            Predicate<File> predicate = (file) -> file.getName().equals("..");
+            files.removeIf(predicate);
+        }
         String[][] data1 = new String[size][4];
         for (int row = 0; row < size; row++) {
-
             data1[row][0] = files.get(row).getName();
             if (files.get(row).isDir()) {
                 data1[row][1] = "文件夹";
