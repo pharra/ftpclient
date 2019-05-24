@@ -100,6 +100,11 @@ public class Upload extends ConnectionMode {
         if (!f.exists()) {
             throw new IOException("File not Exists...");
         }
+        try {
+            String file_path_gbk = new String(file_path.getBytes(), "GBK");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         input.skip(size);

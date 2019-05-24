@@ -17,6 +17,7 @@ import com.ftp.client.utils.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
