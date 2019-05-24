@@ -228,7 +228,7 @@ public class Main {
                     if (table.getValueAt(row, 2).toString().equals("进入")) {
                         try {
                             (new Directory(url, username, password)).ChangeDirectory(path);
-                            workPath = (new Directory(url,username,password)).GetWorkDirectory();
+                            workPath = (new Directory(url, username, password)).GetWorkDirectory();
                             setTable((new ListFile(url, username, password)).list());
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(null, "进入目录错误", "提示", JOptionPane.ERROR_MESSAGE);
@@ -258,8 +258,12 @@ public class Main {
                             }
                             try {
                                 (new Download(url, username, password)).downloadBrokenFile(path, local_path + ".part", size);
+                                if (local_file.exists() && local_file.isFile()) {
+                                    local_file.delete();
+                                }
                                 if (!file.renameTo(local_file)) {
                                     JOptionPane.showMessageDialog(null, "下载文件成功，创建文件失败", "提示", JOptionPane.ERROR_MESSAGE);
+                                    return;
                                 }
                                 JOptionPane.showMessageDialog(null, "下载成功", "提示", JOptionPane.PLAIN_MESSAGE);
                             } catch (Exception e) {
