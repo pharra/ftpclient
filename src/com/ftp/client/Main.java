@@ -26,6 +26,8 @@ public class Main {
     private String username = "root";
     private String password = "";
 
+    private String workPath = "/";
+
     private JFrame frame;
     private JTable table;
     private JTextField urlText;
@@ -226,6 +228,7 @@ public class Main {
                     if (table.getValueAt(row, 2).toString().equals("进入")) {
                         try {
                             (new Directory(url, username, password)).ChangeDirectory(path);
+                            workPath = (new Directory(url,username,password)).GetWorkDirectory();
                             setTable((new ListFile(url, username, password)).list());
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(null, "进入目录错误", "提示", JOptionPane.ERROR_MESSAGE);
@@ -285,8 +288,15 @@ public class Main {
 
     private void setTable(ArrayList<File> files) {
         // table数据初始化
-        String[][] data1 = new String[files.size()][3];
-        for (int row = 0; row < files.size(); row++) {
+        if (!this.workPath.equals("/")) {
+            File file = new File();
+            file.setName("..");
+            file.setIsDir(true);
+            files.add(0, file);
+        }
+        int size = files.size();
+        String[][] data1 = new String[size][3];
+        for (int row = 0; row < size; row++) {
 
             data1[row][0] = files.get(row).getName();
             if (files.get(row).isDir()) {

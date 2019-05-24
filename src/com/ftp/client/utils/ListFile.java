@@ -43,6 +43,9 @@ public class ListFile extends ConnectionMode {
         this.core.exec(null, "226");
         ArrayList<File> files = new ArrayList<File>();
         for (String info : tmp.toString().replace("\r", "").split("\n")) {
+            if (info.equals("")) {
+                continue;
+            }
             File file = new File();
             file.setName(info);
             file.setIsDir(this.isDir(file.getName()));

@@ -94,4 +94,8 @@ public class Command {
     public static String SIZE(String file) {
         return "SIZE " + file;
     }
+
+    public static String PWD() {
+        return "PWD";
+    }
 }
