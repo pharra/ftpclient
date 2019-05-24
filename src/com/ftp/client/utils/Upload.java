@@ -100,14 +100,11 @@ public class Upload extends ConnectionMode {
         if (!f.exists()) {
             throw new IOException("File not Exists...");
         }
-        if(size!=0){
-            file_name+=".part";
-        }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         input.skip(size);
         int dataPort = this.getPasvPort();
-        this.core.exec(Command.APPE(file_name), "150");
+        this.core.exec(Command.APPE(file_name+".part"), "150");
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
         BufferedOutputStream output = new BufferedOutputStream(
                 dataSocket.getOutputStream());
@@ -121,10 +118,7 @@ public class Upload extends ConnectionMode {
         output.close();
         dataSocket.close();
         this.core.exec(null, "226");
-
-        if(size!=0){
-            rename(file_name);
-        }
+        rename(file_name);
     }
 
     /**
