@@ -100,6 +100,9 @@ public class Upload extends ConnectionMode {
         if (!f.exists()) {
             throw new IOException("File not Exists...");
         }
+        if(size!=0){
+            file_name+=".part";
+        }
         FileInputStream is = new FileInputStream(f);
         BufferedInputStream input = new BufferedInputStream(is);
         input.skip(size);
@@ -118,8 +121,19 @@ public class Upload extends ConnectionMode {
         output.close();
         dataSocket.close();
         this.core.exec(null, "226");
+
+        if(size!=0){
+            rename(file_name);
+        }
     }
 
+    /**
+     * 重命名
+     */
+    private void rename(String file_name) throws IOException{
+        this.core.exec(Command.RNFR(file_name+".part"),null);
+        this.core.exec(Command.RNTO(file_name),null);
+    }
 
     //测试代码
     /*private void login() throws IOException {

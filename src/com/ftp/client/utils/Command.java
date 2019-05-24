@@ -98,4 +98,18 @@ public class Command {
     public static String PWD() {
         return "PWD";
     }
+
+    //对旧路径重命名
+    public static String RNFR(String oldpath){
+        return "RNFR "+oldpath;
+    }
+    //对新路径重命名
+    public static String RNTO(String newpath){
+        return "RNTO "+newpath;
+    }
+    //删除指定文件
+    public static String DELE(String filename){
+        return "DELE "+filename;
+    }
+
 }
