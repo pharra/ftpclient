@@ -112,6 +112,7 @@ public class Main {
                     password = passwordText.getText();
                     CoreFactory.getCore(url, username, password);
                     System.out.println("login successful");
+                    workPath = "/";
                     setTable((new ListFile(url, username, password)).list());
                     login.setVisible(false);
                     quit.setVisible(true);
