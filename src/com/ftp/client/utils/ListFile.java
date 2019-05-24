@@ -19,9 +19,6 @@ public class ListFile extends ConnectionMode {
         try {
             this.core.exec(Command.CWD(name), "250");
         } catch (IOException e) {
-            this.core.exec(null, null);
-            this.core.exec(null, null);
-            this.core.exec(null, null);
             return false;
         }
         this.core.exec(Command.CWD(".."), "250");
@@ -35,7 +32,7 @@ public class ListFile extends ConnectionMode {
     public ArrayList<File> list(String path) throws IOException {
         int dataPort = this.getPasvPort();
         Socket dataSocket = this.core.usePortConnectRemote(dataPort);
-        this.core.exec(Command.NLST(path), null);
+        this.core.exec(Command.LIST(path), "150");
         BufferedReader input = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
         char[] buffer = new char[4096];
         int bytesRead = 0;
@@ -50,8 +47,12 @@ public class ListFile extends ConnectionMode {
             if (info.equals("")) {
                 continue;
             }
+            String[] infos = info.split(" ");
+            if (infos[infos.length - 1].equals(".")) {
+                continue;
+            }
             File file = new File();
-            file.setName(info);
+            file.setName(infos[infos.length - 1]);
             file.setIsDir(this.isDir(file.getName()));
             files.add(file);
         }
