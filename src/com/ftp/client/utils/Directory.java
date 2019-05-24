@@ -45,9 +45,9 @@ public class Directory extends ConnectionMode {
         ArrayList<File> files = (new ListFile(url, username, password)).list(pathName);
         for (File file : files) {
             if (file.isDir()) {
-                this.DeleteDirectory(pathName + "/" + file.getName());
+                this.DeleteDirectory(file.getName());
             } else {
-                this.DeleteFile(pathName + "/" + file.getName());
+                this.DeleteFile(file.getName());
             }
         }
         this.core.exec(Command.RMD(pathName), "250");

@@ -10,18 +10,24 @@ import java.util.ArrayList;
 
 public class ListFile extends ConnectionMode {
 
+    private String username;
+    private String password;
+
     public ListFile(String url, String username, String password) throws IOException {
         this.core = CoreFactory.getCore(url, username, password);
+        this.username = username;
+        this.password = password;
     }
 
 
     private boolean isDir(String name) throws IOException {
+        String currentPath = (new Directory(url, username, password)).GetWorkDirectory();
         try {
             this.core.exec(Command.CWD(name), "250");
         } catch (IOException e) {
             return false;
         }
-        this.core.exec(Command.CWD(".."), "250");
+        this.core.exec(Command.CWD(currentPath), "250");
         return true;
     }
 
