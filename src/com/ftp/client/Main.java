@@ -12,9 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 import com.ftp.client.entity.File;
-import com.ftp.client.utils.Directory;
-import com.ftp.client.utils.Download;
-import com.ftp.client.utils.ListFile;
+import com.ftp.client.utils.*;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -167,11 +165,19 @@ public class Main {
                 result = fileChooser.showOpenDialog(null);
                 if (JFileChooser.APPROVE_OPTION == result) {
                     path = fileChooser.getSelectedFile().getPath();
-                    System.out.println("path: " + path);
+                    String name = fileChooser.getSelectedFile().getName();
+                    long size = 0;
                     try {
-                        System.out.println("文件上传成功");
-                    } catch (Exception e) {
+                        size = getFileSize(name);
+                        if (size != 0) {
+                            JOptionPane.showMessageDialog(null, "已有文件存在，使用断点续传功能", "提示", JOptionPane.PLAIN_MESSAGE);
+                        }
+                        (new Upload(url, username, password)).uploadBrokenFile(path, name, size);
+
+                        JOptionPane.showMessageDialog(null, "上传成功", "提示", JOptionPane.PLAIN_MESSAGE);
+                    } catch (IOException e) {
                         e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "上传文件失败", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
                     }
                 }
 
@@ -262,6 +268,18 @@ public class Main {
             }
         });
 
+    }
+
+    private long getFileSize(String file) throws IOException {
+        try {
+            String response = CoreFactory.getCore(url, username, password).exec(Command.SIZE(file), "200");
+            return Long.getLong(response);
+        } catch (Exception e) {
+            CoreFactory.getCore(url, username, password).exec(null, null);
+            CoreFactory.getCore(url, username, password).exec(null, null);
+            CoreFactory.getCore(url, username, password).exec(null, null);
+            return 0;
+        }
     }
 
 

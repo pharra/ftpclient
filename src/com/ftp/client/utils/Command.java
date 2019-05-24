@@ -8,7 +8,9 @@ public class Command {
     }
 
     //更改当前目录
-    public static String CWD(String directory){return "CWD " + directory;}
+    public static String CWD(String directory) {
+        return "CWD " + directory;
+    }
 
     // 在服务器上建立指定目录
     public static String XMKD(String directory) {
@@ -85,7 +87,11 @@ public class Command {
         return "LIST";
     }
 
-    public static String NLST(){
+    public static String NLST() {
         return "NLST .";
+    }
+
+    public static String SIZE(String file) {
+        return "SIZE " + file;
     }
 }
