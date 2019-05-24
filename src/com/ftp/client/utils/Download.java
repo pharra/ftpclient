@@ -84,8 +84,8 @@ public class Download extends ConnectionMode {
      */
     public void downloadBrokenFile(String from_file_name, String to_path, long size) throws IOException {
         int dataPort = this.getPasvPort();
-        Socket dataSocket = this.core.usePortConnectRemote(dataPort);
         this.core.exec(Command.REST(size), null);
+        Socket dataSocket = this.core.usePortConnectRemote(dataPort);
         this.core.exec(Command.RETR(from_file_name), "150");
 
         this.downFile(from_file_name, to_path, dataSocket, true);
